@@ -1,0 +1,141 @@
+﻿@model CarServiceSystemWeb.EntityContext.Car
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div  id="dasda" class="form-horizontal">
+        <h4>Car</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.WINnumber, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.WINnumber, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.WINnumber, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.RegNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.RegNumber, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.RegNumber, "", new { @class = "text-danger" })
+                
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.BrandID, "BrandID", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model=>model.BrandID,null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.BrandID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ModelID, "Model", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @{
+
+                    var context = new CarServiceSystemWeb.EntityContext.CarServiceContext();
+                    List<SelectListItem> models = new List<SelectListItem>();
+                    foreach (var mod in context.Models.Where(i => i.BrandID == Model.BrandID))
+                    {
+                        if (mod.Id == Model.Model.Id)
+                        {
+                            continue;
+                        }
+
+                        models.Add(new SelectListItem
+                        {
+                            Value = mod.Id.ToString(),
+                            Text = mod.Name,
+                        });
+                    }
+                    var sel = new SelectList(models, "Value", "Text");
+                }
+                @Html.DropDownListFor(model => model.ModelID, null, htmlAttributes: new { @class = "form-control" ,id="ModelID"})
+
+                @Html.ValidationMessageFor(model => model.ModelID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Colour, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Colour, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Colour, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.UserID, "UserID", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("UserID", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.UserID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+<div id="span1">dasdsa</div>
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+<script src="~/Scripts/jquery-3.3.1.js"></script>
+<script language="javascript" type="text/javascript">
+    $(document).ready(function FillModels() {
+
+      //  $("#BrandID").val();
+        //func();
+
+
+        $("#BrandID").change(function (e) { func() });
+    });
+            function func() {
+            var a = $("#BrandID Option:Selected").text();
+            //$("#span1").text(a);
+            var dada = document.getElementById('ModelID');
+
+            var select = document.getElementById("ModelID");
+
+            $("#ModelID").empty();
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetModels", "Cars")', 
+                    dataType: 'json',
+                    data: { id: $("#BrandID").val() },
+
+
+                    success: function (states) {
+
+                        $("#span1").text($("#BrandID").val());
+
+                        $.each(states, function (i, state) {
+                            $("#ModelID").append('<option value="' + state.Value + '">' +
+                                state.Text + '</option>');
+                        });
+                    },
+                    error: function (ex) {
+
+                        alert($("#BrandID").val() + ex.responseText);
+                    }
+                });
+              
+      }
+  
+</script>

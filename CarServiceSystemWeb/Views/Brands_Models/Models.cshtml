@@ -1,0 +1,13 @@
+﻿@model List<CarServiceSystemWeb.EntityContext.Model>
+@{
+    ViewBag.Title = "Models";
+}
+
+<h2>Models</h2>
+
+<ul>
+@foreach(var md in Model)
+{
+    <li style="font-size:20px">@md.Name</li>
+}
+</ul>

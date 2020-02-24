@@ -1,0 +1,168 @@
+﻿@model CarServiceSystemWeb.EntityContext.User
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details for @Model.Name</h2>
+
+<hr />
+
+<div>
+    @Html.Label("Name:", new { @class = "lblleft" })
+    @Html.Label("myTextBox", Model.Name, new { @class = "lblright" })
+    <br>
+    <br>
+    @Html.Label("Surename:", new { @class = "lblleft" })
+    @Html.Label("myTextBox", Model.Surename, new { @class = "lblright" })
+    <br>
+    <br>
+    @Html.Label("ID card number:", new { @class = "lblleft" })
+    @Html.Label("myTextBox", Model.IdCardNumber.ToString(), new { @class = "lblright" })
+    <br>
+    <br>
+    @Html.Label("EGN:", new { @class = "lblleft" })
+    @Html.Label("myTextBox", Model.EGN.ToString(), new { @class = "lblright" })
+    <br>
+    <br>
+    @Html.Label("Email:", new { @class = "lblleft" })
+    @Html.Label("myTextBox", Model.Email, new { @class = "lblright" })
+    <br>
+    <br>
+    @Html.Label("Phone:", new { @class = "lblleft" })
+    @Html.Label("myTextBox", "0" + Model.PhoneNumber, new { @class = "lblright" })
+    <br>
+    <br>
+
+    <div id="div">
+
+        <table id="CarTabke" class="table table-bordered table-hover" style="min-width:250px;">
+            <thead>
+
+                <tr>
+                    <th style="border-bottom:solid;">@Model.Name's Cars</th>
+                </tr>
+            </thead>
+            <tbody style="font-size:20px">
+
+
+                @foreach (var car in Model.Cars)
+                {
+                    <tr>
+                        <td style="height:1px; ">@Html.ActionLink(@car.Brand.Name + " " + car.Model.Name, "Details", "Cars", new { id = car.Id }, null)</td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+    
+        <div id="div" style="margin-right:50px;overflow:hidden">
+            @{
+                CarServiceSystemWeb.EntityContext.Model mod = new CarServiceSystemWeb.EntityContext.Model();
+            }
+            <label style="font-size:30px;font-weight:bold;margin-left:50px">Create new car</label><br />
+            <label style="font-size:20px;">Brand:</label>
+
+
+            <select id="BrandID" name="BrandID" class="form-control" style="width:200px;height:30px">
+                <option value="" selected disabled hidden>Choose brand</option>
+                @using (var context = new CarServiceSystemWeb.EntityContext.CarServiceContext())
+                {
+                    foreach (var br in context.Brands)
+                    {
+                        <option value=@br.Id>@br.Name</option>
+                    }
+                }
+            </select><br />
+            <label style="font-size:20px;">Model:</label>
+            <select id="ModelID" name="BrandID" class="form-control" style="width:200px;height:30px">
+                <option value="" selected disabled hidden>Choose model</option>
+            </select><br />
+            <label style="font-size:20px;">WinNumber:</label>
+            <input type="text" id="WinNumber" name="WinNumber" style="width: 150px" /><br>
+            <label style="font-size:20px;">Registration number</label>
+            <input type="text" id="RegNumber" name="RegNumber" style="width: 100px" /><br>
+            <label style="font-size:20px;">Colour:</label>
+            @Html.DropDownList("Colours", null, htmlAttributes: new { @class = "form-control", style = "width:200px", name = "Colour" })
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <br>
+                    <input type="submit" onclick="FillModels" id="sbmt" name="sbmt" style="width:200px" value="Create brand" formenctype="multipart/form-data" />
+                </div>
+            </div>
+
+        </div>
+    
+</div>
+<br>
+<dd style="vertical-align:bottom">
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</dd>
+
+
+
+
+
+<script src="~/Scripts/jquery-3.3.1.js"></script>
+<script language="javascript" type="text/javascript">
+    $(document).ready(function FillModels() {
+        $("#sbmt").click(function (e) { func1() });
+        $("#BrandID").change(function (e) { func() });
+        
+        });
+
+    function func1() {
+        var a = $("#BrandID Option:Selected").val();
+        $("#span1").text(a);
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("CreateCar", "Users")',
+                    dataType: 'json',
+                    data: {
+                        brandID: $("#BrandID").val(), modelID: $("#ModelID").val(), winNumber: $("#WinNumber").val(),
+                        regNumber: $("#RegNumber").val(), colour: $("#Colours").val(), userID: @Model.Id},
+
+
+                    success: function (data) {
+                        window.location.href = data;
+                    },
+                    error: function (ex) {
+
+                        alert($("#BrandID").val() + ex.responseText);
+                    }
+                });
+
+        }
+    function func() {
+
+            $("#ModelID").empty();
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetModels", "Cars")',
+                    dataType: 'json',
+                    data: { id: $("#BrandID").val() },
+
+
+                    success: function (states) {
+
+
+                        $.each(states, function (i, state) {
+                            $("#ModelID").append('<option value="' + state.Value + '">' +
+                                state.Text + '</option>');
+                        });
+                    },
+                    error: function (ex) {
+
+                        alert($("#BrandID").val() + ex.responseText);
+                    }
+                });
+
+      }
+
+</script>
+
+
+
+

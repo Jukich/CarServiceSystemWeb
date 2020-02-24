@@ -1,0 +1,114 @@
+﻿@model List<CarServiceSystemWeb.EntityContext.Brand>
+@{
+    ViewBag.Title = "Brands";
+}
+
+<h2>Brands</h2>
+<div>
+
+    <dl class="logo1">
+        @foreach (var br in Model.OrderBy(i => i.Name))
+        {
+            <dd>
+                <a id="img" href="Brands/@br.Id">
+                    <span>
+                        <img src="@String.Format("data:image/png;base64,{0}", Convert.ToBase64String(br.imageUrl))" />
+                    </span>
+                </a>
+                @Html.ActionLink(br.Name, "Models", "Brands_Models", new { id = br.Id }, null)
+            </dd>
+        }
+    </dl>
+    @{
+        CarServiceSystemWeb.EntityContext.Brand brand = new CarServiceSystemWeb.EntityContext.Brand();
+    }
+
+    @using (Html.BeginForm("Create", "Brands_Models", new { name = brand.Name}))
+    {
+    <div id="divBrands">
+
+        <h2>Add new brand</h2>
+        <label style="font-size:20px">Name:</label>
+        <input type="text" id="name" name="name" style="width: 200px" />
+        <br>
+        <label style="font-size:20px">Logo:</label>
+
+        <input type="file" accept="image/*" name="file" value="Choose image" />
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <br>
+                <input type="submit" style="width:200px" value="Create brand" formenctype="multipart/form-data" />
+            </div>
+        </div>
+
+    </div>
+    }
+</div>
+
+<style>
+    .logo1 {
+        width: 70%;
+        overflow: hidden;
+        padding-bottom: 15px;
+
+    }
+
+        .logo1 dd {
+            float: left;
+            width: auto;
+            height: 150px;
+            margin: 10px 10px;
+            text-align: center;
+            font-size: 21px;
+            color: #999;
+        }
+            .logo1 dd a {
+                height: 150px;
+                font-size: 16px;
+                display: block;
+                vertical-align: middle;
+                margin-bottom: 10px;
+            }
+            .logo1 dd a {
+                height: 100px;
+                font-size: 16px;
+                display: block;
+                vertical-align: middle;
+                margin-bottom: 10px;
+            }
+            .logo1 dd img {
+                width: 100px;
+                height: 100px;
+                display: block;
+                padding: 0 10px;
+                object-fit:scale-down;
+            }
+            .logo1 dd a span {
+                display: block;
+                vertical-align: bottom;
+                border: 10px solid white;
+            }
+    #img {
+        height: 100px;
+        font-size: 16px;
+        display: block;
+        vertical-align: middle;
+        margin-bottom: 10px;
+    }
+
+
+</style  
+ @* .viewall a {
+        display: block;
+        width: auto;
+        border: 1px solid #EBEBEB;
+        height: 38px;
+        line-height: 38px;
+        text-align: center;
+        margin-top: 40px;
+        font-weight: bold;
+        font-size: 16px
+    }
+   *@>
+
