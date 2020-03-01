@@ -1,13 +1,160 @@
-﻿@model List<CarServiceSystemWeb.EntityContext.Model>
+﻿@model CarServiceSystemWeb.EntityContext.Brand
 @{
     ViewBag.Title = "Models";
 }
 
-<h2>Models</h2>
+<h2>@Model.Name Models</h2>
+<div id="mainDiv">
 
-<ul>
-@foreach(var md in Model)
-{
-    <li style="font-size:20px">@md.Name</li>
-}
-</ul>
+    <div id="dv" style="float:right">
+
+        <div id="divDelelteBrand">
+            <div class="col-md-offset-2 col-md-10">
+
+                <input type="button"  value="Delete Brand" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" style="width:120px;text-transform:none;" />
+            </div>
+        </div><br />
+        @using (Html.BeginForm("EditBrand", "Brands_Models", new { actionType = 5, brandID = Model.Id, name = "Gxye" }))
+        {
+            <div id="divchangeImg">
+                <div class="col-md-offset-2 col-md-10">
+                    <label>Change brand logo:</label><br />
+                    <input type="file" id="imgFile" name="imgFile" value="Choose image" />
+                    <input type="submit" id="btnChangeImg" name="btnChangeImg" value="Change logo" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" formenctype="multipart/form-data" />
+                </div>
+            </div>
+        }
+    </div>
+    <div id="dv" style="float:right">
+        <div id="divAdd">
+            <div id="error">@ViewData["NewModelError"]</div>
+            @Html.Editor("NewModel")
+            <div class="col-md-offset-2 col-md-10">
+                <input type="button" name="btnAdd" id="btnAdd" value="Add Model" class="btn btn-default" />
+            </div>
+        </div>
+        <div id="divRemove">
+            <div id="error">@ViewData["DeleteModelError"]</div>
+            @Html.Editor("DeleteModel")
+            <div class="col-md-offset-2 col-md-10">
+                <input type="button" name="btnRemove" id="btnRemove" value="Remove Model" class="btn btn-default" data-toggle="" />
+            </div>
+        </div>
+        <div id="divChangeName">
+            <div id="error">@ViewData["BrandNameError"]</div>
+            @Html.Editor("ChangeBrandName")
+            <div class="col-md-offset-2 col-md-10">
+                <input type="button" name="btnChangeBrandName" id="btnChangeBrandName" value="Change brand name" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+    <ul style="list-style:none;font-size:20px">
+
+        @foreach (var md in ViewBag.Models)
+        {
+            <li>@md.Name</li>
+        }
+
+    </ul>
+
+</div>
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Are you sure?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" name="btnDeleteBrand" id="btnDeleteBrand" class="btn btn-primary" >Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="https://code.jquery.com/ui/1.11.1/jquery-ui.min.js"></script>
+<script src="~/Scripts/jquery-3.3.1.js"></script>
+
+
+<script src="~/Scripts/jquery-3.3.1.js"></script>
+<script language="javascript" type="text/javascript">
+    $(document).ready(function FillModels() {
+
+        $("#btnAdd").click(function (e) { var a = 1; var b = $("#NewModel").val(); func(a,b) });
+        $("#btnRemove").click(function (e) { var a = 2; var b = $("#DeleteModel").val(); func(a, b) });
+        $("#btnChangeBrandName").click(function (e) { var a = 3; var b = $("#ChangeBrandName").val(); func(a, b) });
+        $("#btnDeleteBrand").click(function (e) { var a = 4; b = "Gxye"; func(a, b) });
+        //$("#btnChangeImg").click(function (e) { var a = 5; b = ""; func(a, b) });
+
+
+        });
+
+    function func(a, b) {
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("EditBrand", "Brands_Models")',
+                    dataType: 'json',
+                    data: {
+                        actionType: a, brandID: @Model.Id, name: b },
+
+
+                    success: function (data) {
+                        window.location.href = data;
+                    },
+                    error: function (ex) {
+
+                        alert($("#BrandID").val() + ex.responseText);
+                    }
+                });
+
+    }
+
+
+</script>
+<style>
+    @@media (min-width: 1200px) {
+        #error {
+            color: red;
+            width: 250px;
+        }
+
+        #mainDiv {
+            height: 520px;
+            vertical-align: top;
+        }
+    }
+
+    @@media (max-width:1200px ) {
+        #divBrands {
+            top: auto;
+            left: auto;
+            position: absolute;
+            float: right;
+            height: 200px;
+            margin-top: -100px;
+            margin-right: 200px;
+            overflow: auto
+        }
+
+        #dv {
+            position: absolute;
+            top: 240px;
+            left: 500px;
+        }
+
+        #divDelelteBrand {
+            height: 70px;
+        }
+
+        #error {
+            color: red;
+            width: 250px;
+        }
+    }
+</style>

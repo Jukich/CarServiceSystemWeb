@@ -5,6 +5,7 @@ namespace CarServiceSystemWeb.EntityContext
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
+    using CustomValidation;
 
     [Table("Car")]
     public partial class Car
@@ -16,21 +17,24 @@ namespace CarServiceSystemWeb.EntityContext
         }
 
         public int Id { get; set; }
-
+        
         [Required]
-        [StringLength(100)]
+        [RegularExpression(@"^[A-Z0-9]{17}$", ErrorMessage = "VIN number must contain 17 symbols!")]
+        [DuplicateValidation("Car")]
         public string WINnumber { get; set; }
 
         [Required]
-        [StringLength(100)]
+        [RegularExpression(@"^[ABEKMÍOPCTYX]{2}[0-9]{4}[ABEKMÍOPCTYX]{2}$", ErrorMessage = "Invalid regirstration number!")]
+        [DuplicateValidation("Car")]
         public string RegNumber { get; set; }
 
+        [Required]
         public int BrandID { get; set; }
 
+        [Required]
         public int ModelID { get; set; }
 
         [Required]
-        [StringLength(100)]
         public string Colour { get; set; }
 
         public int? UserID { get; set; }

@@ -1,0 +1,123 @@
+﻿@model CarServiceSystemWeb.EntityContext.UserProfile
+
+@{
+    ViewBag.Title = "Login";
+}
+
+@using (Html.BeginForm("Login", "Home", FormMethod.Post))
+{
+
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    if (@ViewBag.Message != null)
+    {
+        <div style="border: 1px solid red">
+            @ViewBag.Message
+        </div>
+    }
+    <div class="form-group">
+
+        <label for="exampleInputEmail1">Username</label>
+        @Html.TextBoxFor(a => a.UserName, htmlAttributes: new {@class = "form-control", id = "txtName", data_val = "false" })
+    </div>
+    <div class="form-group">
+
+        @Html.LabelFor(a => a.Password)
+
+        @Html.PasswordFor(a => a.Password, htmlAttributes: new { @class = "form-control",data_val = "false" })
+        <label style="color:red;">@ViewData["LogInError"]</label>
+
+    </div>
+
+    <div style="float:right">
+        <label>Dont have an account?</label>
+        <a id="AddCar" href="#exampleModal" style="background-color:transparent;color:blue" data-toggle="modal">Create one</a>
+
+    </div>
+    <div id="divPartial" style="margin-bottom:50px">
+        <button type="submit" id="btnLogin" name="btnLogin" class="btn btn-primary">Log in</button>
+    </div>
+
+    <div id="AddCarForm" data-url="@Url.Action("SignUp", "Home", new { area = "Area Name" })"></div>
+
+}
+
+<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="https://code.jquery.com/ui/1.11.1/jquery-ui.min.js"></script>
+<script src="~/Scripts/jquery-3.3.1.js"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/additional-methods.min.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css" />
+
+<script language="javascript" type="text/javascript">
+    $(document).ready(function FillModels() {
+        $("#BrandID").change(function (e) { func() });
+    });
+
+    $("#AddCar").on('click', function () {
+        $("#AddCarForm").dialog({
+            autoOpen: true,
+            //position: { my: "center", at: "top+350", of: window },
+            width: 1000,
+            //resizable: false,
+            title: 'Sign up',
+            modal: true,
+            open: function () {
+                //var $formContainer = $('#AddUserForm');
+                //var url = $formContainer.attr('data-url');
+                $('#AddCarForm').load('@Url.Action("SignUpPartialView", "Home")', function () {
+                    var $form = $('#myForm');
+                    $.validator.unobtrusive.parse($form);
+                    $form.submit(function () {
+                        if ($form.valid()) {
+                            $.ajax({
+                                url: '@Url.Action("SignUp", "Home")',
+                                async: true,
+                                type: 'POST',
+                                data: $(this).serialize(),
+                                beforeSend: function (xhr, opts) {
+                                    //alert(this.url);
+                                },
+                                //contentType: 'application/json; charset=utf-8',
+                                complete: function () {
+                                },
+                                success: function (data) {
+                                    //alert("success");
+                                    console.log(data);
+                                    $("#AddCarForm").dialog("close");
+                                },
+                                error: function (data) {
+                                    // console.log(p.replace('dog', 'monkey'));
+                                    //var error = data.responseText.substring(10, data.responseText.length - 2)
+                                    //var p;
+                                    var error = data.responseText.substring(10, data.responseText.length - 2)
+                                    p = error.replace(/newLineStr/g, "\n");
+                                    alert(p);
+                                   // $("#dialog").dialog();
+                                    //alert("some rutime error");
+                                    //console.log(data);
+                                }
+                            });
+                        }
+                        return false;
+                    });
+                });
+            },
+            buttons: {
+                "Create profile": function () {
+                    $("#myForm").submit();
+                },
+                Cancel: function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+        return false;
+    });
+
+
+</script>
+
+
+
+

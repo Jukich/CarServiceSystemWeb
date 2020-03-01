@@ -11,6 +11,7 @@ using CarServiceSystemWeb.EntityContext;
 
 namespace CarServiceSystemWeb.Controllers
 {
+    [Authorize]
     public class CarsController : Controller
     {
         private CarServiceContext db = new CarServiceContext();
@@ -78,9 +79,18 @@ namespace CarServiceSystemWeb.Controllers
             {
                 return HttpNotFound();
             }
+
+            List<string> Colours = new List<string>();
+            Colours.Add(null);
+            foreach (System.Reflection.PropertyInfo prop in typeof(System.Windows.Media.Colors).GetProperties())
+            {
+                Colours.Add(prop.Name);
+            }
+
             ViewBag.BrandID = new SelectList(db.Brands, "Id", "Name", car.BrandID);
             ViewBag.ModelID = new SelectList(db.Models.Where(i=>i.BrandID==car.BrandID), "Id", "Name", car.ModelID);
             ViewBag.UserID = new SelectList(db.Users, "Id", "Name", car.UserID);
+            ViewBag.Colours = new SelectList(Colours, car.Colour);
 
             return View(car);
         }
@@ -108,18 +118,15 @@ namespace CarServiceSystemWeb.Controllers
         }
 
         // GET: Cars/Delete/5
-        public ActionResult Delete(int? id)
+        public ActionResult Delete(int id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Car car = db.Cars.Find(id);
-            if (car == null)
-            {
-                return HttpNotFound();
-            }
-            return View(car);
+            Car c = db.Cars.Where(i => i.Id == id).First();
+            var userID = c.UserID;
+            db.Cars.Remove(c);
+            db.SaveChanges();
+            var user = db.Users.Where(i => i.Id == userID).First();
+
+            return RedirectToAction("Details", "Users", user);
         }
 
         // POST: Cars/Delete/5
@@ -161,36 +168,6 @@ namespace CarServiceSystemWeb.Controllers
             var selectedList = new SelectList(models,"Id","Name");
             return Json(new SelectList(models, "Id", "Name"));
         }
-        /*
-        [ValidateInput(false)]
-        [AcceptVerbs("POST")]
-        public ActionResult Index(Category category)
-        {
-
-            var categoryId = Request["CategoryId"];
-            LoadCategory();
-            LoadSubCategory(Convert.ToInt32(categoryId));
-
-
-            return View();
-        }
-
-        public void LoadCategory()
-        {
-
-            var db = new DataClasses1DataContext();
-            var query = db.Categories.Select(c => new { c.CategoryId, c.CategoryText });
-            ViewData["Categories"] = new SelectList(query.AsEnumerable(), "CategoryId", "CategoryText", 3);
-        }
-        public void LoadSubCategory(int id)
-        {
-
-            var db = new CarServiceSystemWeb.EntityContext.CarServiceContext();
-            var query1 = db.Models.Where(w => w.BrandID == id).Select(c => new { c.subcatId, c.Name });
-
-            ViewData["SubCategories"] = new SelectList(query1.AsEnumerable(), "subcatId", "Name", 3);
-        }
-        */
 
         public void Messagebox(string xMessage)
         {

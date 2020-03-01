@@ -1,0 +1,101 @@
+﻿@model  CarServiceSystemWeb.EntityContext.Car
+
+<form id="myForm" method="post">
+    <div class="form-group">
+        @Html.LabelFor(model => model.BrandID, "Brand", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownListFor(model => model.BrandID, null, "--Choose brand--", htmlAttributes: new { @class = "form-control", id = "BrandID" })
+            @Html.ValidationMessageFor(model => model.BrandID, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.ModelID, "Model", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownListFor(model => model.ModelID, null, "--Choose model--", htmlAttributes: new { @class = "form-control", id = "ModelID" })
+            @Html.ValidationMessageFor(model => model.ModelID, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.WINnumber,"VIN number", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.WINnumber, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.WINnumber, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.RegNumber,"Registration number", htmlAttributes: new { @class = "control-label col-md-2",style= "max-width:300px;" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.RegNumber, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.RegNumber, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.Colour, "Colour", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownListFor(model => model.Colour, null, "--Choose colour--", htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Colour, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+</form>
+
+
+<script language="javascript" type="text/javascript">
+    $(document).ready(function FillModels() {
+        $("#sbmt").click(function (e) { func1() });
+        $("#BrandID").change(function (e) { func() });
+
+    });
+    function func1() {
+        var a = $("#BrandID Option:Selected").val();
+        $("#span1").text(a);
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("CreateCar", "Users")',
+                    dataType: 'json',
+                    data: {
+                        brandID: $("#BrandID").val(), modelID: $("#ModelID").val(), winNumber: $("#WinNumber").val(),
+                        regNumber: $("#RegNumber").val(), colour: $("#Colours").val(), userID: @Model.Id},
+
+                    success: function (data) {
+                        window.location.href = data;
+                    },
+                    error: function (ex) {
+
+                        alert($("#BrandID").val() + ex.responseText);
+                    }
+                });
+
+    }
+
+    function func() {
+        jQuery("#BrandID option:contains('--Choose brand--')").remove();
+        var a = $("#BrandID Option:Selected").val();
+        $("#span1").text(a);
+            $("#ModelID").empty();
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetModels", "Cars")',
+                    dataType: 'json',
+                    data: { id: $("#BrandID").val() },
+
+
+                    success: function (states) {
+
+
+                        $.each(states, function (i, state) {
+                            $("#ModelID").append('<option value="' + state.Value + '">' +
+                                state.Text + '</option>');
+                        });
+                    },
+                    error: function (ex) {
+
+                        alert($("#BrandID").val() + ex.responseText);
+                    }
+                });
+
+      }
+
+</script>
+

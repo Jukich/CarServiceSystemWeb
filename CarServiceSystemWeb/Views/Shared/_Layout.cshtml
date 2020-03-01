@@ -8,16 +8,31 @@
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
-    <div class="container" >
+    <div class="container">
         <div class="masthead">
-            <div class="navbar-header" >
-                @Html.ActionLink("Car Service", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            <div class="navbar-header">
+
+                @Html.ActionLink("Car Service", "About", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                <div id="divUser">
+                    @if (Session["UserID"] != null)
+                    {
+                        <label class="navbar-brand">
+                            Welcome @Session["UserName"].ToString()
+                        </label>
+                        @Html.ActionLink("Logout", "Logout", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Login", "Login", "Home", new { area = "" }, new { @class = "navbar-brand" })
+
+                    }
+                </div>
             </div>
-                <ul class="nav nav-justified">
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Brands", "Brands", "Brands_Models")</li>
-                    <li>@Html.ActionLink("Users", "Index", "Users")</li>
-                </ul>
+            <ul class="nav nav-justified">
+                <li>@Html.ActionLink("About", "About", "Home")</li>
+                <li>@Html.ActionLink("Brands", "Brands", "Brands_Models")</li>
+                <li>@Html.ActionLink("Users", "Index", "Users")</li>
+            </ul>
         </div>
     </div>
 
@@ -25,12 +40,20 @@
     <br>
     <div class="container body-content">
         @RenderBody()
-        <hr />
 
     </div>
 
+    <div class="footer">
+        <p>© Car Service System </p>
+        All images are the property of their respective owners. If you found any image copyrighted to yours, Please contact us, so we can remove it.
+    </div>
+
+    @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap-lux")
+    @Scripts.Render("~/bundles/jqueryui")
+    @Scripts.Render("~/bundles/jqueryval")
+
     @RenderSection("scripts", required: false)
 </body>
 </html>
+

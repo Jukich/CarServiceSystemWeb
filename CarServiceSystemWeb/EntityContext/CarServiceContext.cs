@@ -17,6 +17,7 @@ namespace CarServiceSystemWeb.EntityContext
         public virtual DbSet<Model> Models { get; set; }
         public virtual DbSet<Repair> Repairs { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<UserProfile> UserProfiles { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

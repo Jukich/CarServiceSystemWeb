@@ -1,0 +1,25 @@
+﻿@model CarServiceSystemWeb.EntityContext.UserProfile
+@{
+    ViewBag.Title = "SignUp";
+}
+<form id="myForm" method="post">
+    <h2>Create account</h2>
+    
+        <div class="form-group">
+
+            <label for="exampleInputEmail1">Username</label>
+            @Html.TextBoxFor(a => a.UserName, htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(a => a.UserName,"", new { @class = "text-danger" })
+        </div>
+        <div class="form-group">
+
+            @Html.LabelFor(a => a.Password)
+
+            @Html.PasswordFor(a => a.Password, htmlAttributes: new { @class = "form-control" })
+
+            @Html.ValidationMessageFor(a => a.Password, "", new { @class = "text-danger" })
+            
+        </div>
+       
+
+</form>

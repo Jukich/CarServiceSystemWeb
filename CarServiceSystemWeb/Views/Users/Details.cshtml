@@ -4,39 +4,48 @@
     ViewBag.Title = "Details";
 }
 
+
+<style>
+@@media(min-width:1200px){
+    #divPartial {
+        margin-right: 0px;
+        overflow: auto;
+        float: right
+    }
+}
+@@media (max-width:1200px ) {
+    #mainDiv {
+        display:table;
+    }
+    #divInfo {
+        display: table-header-group;
+    }
+    #divPartial{
+
+        margin-top:50px;
+        display:table-footer-group;
+        float:none;
+    }
+}
+</style>
 <h2>Details for @Model.Name</h2>
 
 <hr />
 
-<div>
-    @Html.Label("Name:", new { @class = "lblleft" })
-    @Html.Label("myTextBox", Model.Name, new { @class = "lblright" })
-    <br>
-    <br>
-    @Html.Label("Surename:", new { @class = "lblleft" })
-    @Html.Label("myTextBox", Model.Surename, new { @class = "lblright" })
-    <br>
-    <br>
-    @Html.Label("ID card number:", new { @class = "lblleft" })
-    @Html.Label("myTextBox", Model.IdCardNumber.ToString(), new { @class = "lblright" })
-    <br>
-    <br>
-    @Html.Label("EGN:", new { @class = "lblleft" })
-    @Html.Label("myTextBox", Model.EGN.ToString(), new { @class = "lblright" })
-    <br>
-    <br>
-    @Html.Label("Email:", new { @class = "lblleft" })
-    @Html.Label("myTextBox", Model.Email, new { @class = "lblright" })
-    <br>
-    <br>
-    @Html.Label("Phone:", new { @class = "lblleft" })
-    @Html.Label("myTextBox", "0" + Model.PhoneNumber, new { @class = "lblright" })
-    <br>
-    <br>
+<div id="mainDiv">
+    @{
+        var c = new CarServiceSystemWeb.EntityContext.Car();
+    }
+    
+    <div id="divPartial">
+        <button id="AddCar" name="AddCar" class="btn btn-primary" data-toggle="modal" style="margin-top:50px">Add car for this user</button><br/>
+        <input type="button" value="Edit user" onclick="location.href='@Url.Action("Edit", "Users",new { id = Model.Id })'" style="width:200px; margin-top:50px" class="btn btn-primary" />
+    </div>
+    <div id="AddCarForm" data-url="@Url.Action("AddCarInfo", "Users", new { area = "Area Name" })"></div>
 
     <div id="div">
 
-        <table id="CarTabke" class="table table-bordered table-hover" style="min-width:250px;">
+        <table id="CarTabke" class="table table-bordered table-hover" style="width:350px;">
             <thead>
 
                 <tr>
@@ -55,113 +64,131 @@
 
             </tbody>
         </table>
+
     </div>
-    
-        <div id="div" style="margin-right:50px;overflow:hidden">
-            @{
-                CarServiceSystemWeb.EntityContext.Model mod = new CarServiceSystemWeb.EntityContext.Model();
-            }
-            <label style="font-size:30px;font-weight:bold;margin-left:50px">Create new car</label><br />
-            <label style="font-size:20px;">Brand:</label>
+    <div id="divInfo">
+        @Html.Label("Name:", new { @class = "lblleft" })
+        @Html.Label("myTextBox", Model.Name, new { @class = "lblright" })
+        <br>
+        <br>
+        @Html.Label("Surename:", new { @class = "lblleft" })
+        @Html.Label("myTextBox", Model.Surename, new { @class = "lblright" })
+        <br>
+        <br>
+        @Html.Label("ID card number:", new { @class = "lblleft" })
+        @Html.Label("myTextBox", Model.IdCardNumber.ToString(), new { @class = "lblright" })
+        <br>
+        <br>
+        @Html.Label("EGN:", new { @class = "lblleft" })
+        @Html.Label("myTextBox", Model.EGN.ToString(), new { @class = "lblright" })
+        <br>
+        <br>
+        @Html.Label("Email:", new { @class = "lblleft" })
+        @Html.Label("myTextBox", Model.Email, new { @class = "lblright" })
+        <br>
+        <br>
+        @Html.Label("Phone:", new { @class = "lblleft" })
+        @Html.Label("myTextBox", "0" + Model.PhoneNumber, new { @class = "lblright" })
+        <br>
+        <br>
+    </div>
 
 
-            <select id="BrandID" name="BrandID" class="form-control" style="width:200px;height:30px">
-                <option value="" selected disabled hidden>Choose brand</option>
-                @using (var context = new CarServiceSystemWeb.EntityContext.CarServiceContext())
-                {
-                    foreach (var br in context.Brands)
-                    {
-                        <option value=@br.Id>@br.Name</option>
-                    }
-                }
-            </select><br />
-            <label style="font-size:20px;">Model:</label>
-            <select id="ModelID" name="BrandID" class="form-control" style="width:200px;height:30px">
-                <option value="" selected disabled hidden>Choose model</option>
-            </select><br />
-            <label style="font-size:20px;">WinNumber:</label>
-            <input type="text" id="WinNumber" name="WinNumber" style="width: 150px" /><br>
-            <label style="font-size:20px;">Registration number</label>
-            <input type="text" id="RegNumber" name="RegNumber" style="width: 100px" /><br>
-            <label style="font-size:20px;">Colour:</label>
-            @Html.DropDownList("Colours", null, htmlAttributes: new { @class = "form-control", style = "width:200px", name = "Colour" })
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <br>
-                    <input type="submit" onclick="FillModels" id="sbmt" name="sbmt" style="width:200px" value="Create brand" formenctype="multipart/form-data" />
-                </div>
-            </div>
 
-        </div>
-    
 </div>
 <br>
 <dd style="vertical-align:bottom">
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
     @Html.ActionLink("Back to List", "Index")
 </dd>
 
-
-
-
-
+<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="https://code.jquery.com/ui/1.11.1/jquery-ui.min.js"></script>
 <script src="~/Scripts/jquery-3.3.1.js"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/additional-methods.min.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css" />
+
 <script language="javascript" type="text/javascript">
     $(document).ready(function FillModels() {
-        $("#sbmt").click(function (e) { func1() });
         $("#BrandID").change(function (e) { func() });
-        
+
+    });
+
+    $("#AddCar").on('click', function () {
+        $("#AddCarForm").dialog({
+            autoOpen: true,
+            //position: { my: "center", at: "top+350", of: window },
+            width: 1000,
+            //resizable: false,
+            title: 'Add Car',
+            modal: true,
+            open: function () {
+                //var $formContainer = $('#AddUserForm');
+                //var url = $formContainer.attr('data-url');
+                @if(Session["UserID"] == null)
+                {
+                            <text>
+
+                    @Url.Action("Login", "Home");
+                        </text>
+
+                }
+
+                $('#AddCarForm').load('@Url.Action("AddCarPartialView", "Users")', function () {
+                    var $form = $('#myForm');
+                    $.validator.unobtrusive.parse($form);
+                    $form.submit(function () {
+                        if ($form.valid()) {
+                            $.ajax({
+                                url: '@Url.Action("AddCar", "Users")',
+                                async: true,
+                                type: 'POST',
+                                data: $(this).serialize() + "&userID="+@Model.Id,
+                                beforeSend: function (xhr, opts) {
+                                    //alert(this.url);
+                                },
+                                //contentType: 'application/json; charset=utf-8',
+                                complete: function () {
+                                },
+                                success: function (data) {
+                                    //alert("success");
+                                    console.log(data);
+                                    $("#AddCarForm").dialog("close");
+                                },
+                                error: function (data) {
+                                    // console.log(p.replace('dog', 'monkey'));
+                                    var error = data.responseText.substring(10, data.responseText.length - 2)
+                                    var p;
+                                    p = error.replace(/newLineStr/g, "\n");
+                                    alert(p);
+                                    //alert("some rutime error");
+                                    //console.log(data);
+                                }
+                            });
+                        }
+                        return false;
+                    });
+                });
+            },
+            buttons: {
+                "Add Car": function () {
+                    $("#myForm").submit();
+                },
+                Cancel: function () {
+                    $(this).dialog("close");
+                }
+            }
         });
+        return false;
+    });
 
-    function func1() {
-        var a = $("#BrandID Option:Selected").val();
-        $("#span1").text(a);
-                $.ajax({
-                    type: 'POST',
-                    url: '@Url.Action("CreateCar", "Users")',
-                    dataType: 'json',
-                    data: {
-                        brandID: $("#BrandID").val(), modelID: $("#ModelID").val(), winNumber: $("#WinNumber").val(),
-                        regNumber: $("#RegNumber").val(), colour: $("#Colours").val(), userID: @Model.Id},
-
-
-                    success: function (data) {
-                        window.location.href = data;
-                    },
-                    error: function (ex) {
-
-                        alert($("#BrandID").val() + ex.responseText);
-                    }
-                });
-
-        }
-    function func() {
-
-            $("#ModelID").empty();
-                $.ajax({
-                    type: 'POST',
-                    url: '@Url.Action("GetModels", "Cars")',
-                    dataType: 'json',
-                    data: { id: $("#BrandID").val() },
-
-
-                    success: function (states) {
-
-
-                        $.each(states, function (i, state) {
-                            $("#ModelID").append('<option value="' + state.Value + '">' +
-                                state.Text + '</option>');
-                        });
-                    },
-                    error: function (ex) {
-
-                        alert($("#BrandID").val() + ex.responseText);
-                    }
-                });
-
-      }
 
 </script>
+
+
+
+
+
 
 
 
