@@ -93,16 +93,20 @@ namespace CarServiceSystemWeb.Controllers
                 }
                 else
                 {
-                    string p = "";
-                    Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                    string p = "NoErrorFound";
+                    //Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                    if (ViewData.ModelState.Values.Count != 0)
+                    {
+                        p = null;
+                    }
                     foreach (ModelState modelState in ViewData.ModelState.Values)
                     {
                         foreach (ModelError error in modelState.Errors)
                         {
-                            p += error.ErrorMessage + " " + "newLineStr";
+                            p += error.ErrorMessage + "\n";
                         }
                     }
-                    return Json(new { Error = p }, JsonRequestBehavior.AllowGet);
+                    return Json(new {Error = p }, JsonRequestBehavior.AllowGet);
                 }
             }
 
