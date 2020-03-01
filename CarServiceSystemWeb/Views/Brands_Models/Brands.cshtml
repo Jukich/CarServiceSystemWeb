@@ -5,7 +5,34 @@
 
 <h2>Brands</h2>
 <div>
+    @{
+        CarServiceSystemWeb.EntityContext.Brand brand = new CarServiceSystemWeb.EntityContext.Brand();
+    }
 
+
+    <div id="divBrands">
+        @using (Html.BeginForm("Create", "Brands_Models", new { name = brand.Name }))
+        {
+            <h2>Add new brand</h2>
+            <div style="color:red">@ViewData["NameError"]</div>
+
+            <label style="font-size:20px">Name:</label>
+            <input type="text" id="name" name="name" style="width: 200px" />
+            <br>
+            <div style="color:red">@ViewData["LogoError"]</div>
+
+            <label style="font-size:20px">Logo:</label>
+            <input type="file" accept="image/*" name="file" value="Choose image" />
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <br>
+                    <input type="submit" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" value="Create brand" formenctype="multipart/form-data" />
+                </div>
+            </div>
+        }
+
+    </div>
+    <div>
     <dl class="logo1">
         @foreach (var br in Model.OrderBy(i => i.Name))
         {
@@ -19,32 +46,8 @@
             </dd>
         }
     </dl>
-    @{
-        CarServiceSystemWeb.EntityContext.Brand brand = new CarServiceSystemWeb.EntityContext.Brand();
-    }
-
-    @using (Html.BeginForm("Create", "Brands_Models", new { name = brand.Name }))
-    {
-    <div id="divBrands">
-        <h2>Add new brand</h2>
-        <div style="color:red">@ViewData["NameError"]</div>
-
-        <label style="font-size:20px">Name:</label>
-        <input type="text" id="name" name="name" style="width: 200px" />
-        <br>
-        <div style="color:red">@ViewData["LogoError"]</div>
-
-        <label style="font-size:20px">Logo:</label>
-        <input type="file" accept="image/*" name="file" value="Choose image" />
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <br>
-                <input type="submit" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" value="Create brand" formenctype="multipart/form-data" />
-            </div>
-        </div>
 
     </div>
-    }
 </div>
 
 
@@ -53,7 +56,6 @@
 
 <style>
     .logo1 {
-        width: 70%;
         overflow: hidden;
         padding-bottom: 15px;
     }

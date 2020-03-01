@@ -139,9 +139,7 @@ body {
 @media (min-width: 1200px) {
     #divBrands {
 
-        position: absolute;
-        top: 200px;
-        left: 1000px;
+float:right;
     }
 }
 
@@ -151,14 +149,5 @@ body {
         margin-right: 200px;
         height: 300px;
         overflow: auto
-    }
-}
-@@media(min-width: 1200px) {
-    #divUser {
-    }
-}
-
-@@media (max-width:1200px ) {
-    #divUser {
     }
 }
